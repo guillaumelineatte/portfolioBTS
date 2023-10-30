@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<header>
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css">
+</header>
+<h1>
+	Bonjour Guillaumejjjjj
+</h1>
+
+<h3>{{ the }} {{ go }}</h3>
+
+<ul>
+    {% for data in array %}
+        <li>{{ data }}</li>
+    {% endfor %}
+</ul>
+<table id="table" class="display" border = 34>
+    <thead>
+        <tr>
+            <th>Table des départements</th>
+            <th>Numéro de département</th>
+        </tr>
+    </thead>
+    <tbody>
+            {% for data in datas %}
+                <tr>
+                    <td>{{ data.departement_nom }}</td>
+                    <td>{{ data.departement_code }}</td>
+                </tr>
+            {% endfor %}
+    <script>
+        new DataTable('#table');
+    </script>
+    </tbody>
+</table>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+
+<script type="text/javascript">
+    $("#table").dataTable({
+        
+        "pageLength": 10,
+        "Show" : "Montrer",
+        "language": {
+            "search": "Rechercher:",
+        }
+    });
+</script>
