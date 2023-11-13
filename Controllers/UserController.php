@@ -2,52 +2,85 @@
 
 namespace Controllers;
 
+//use Symfony\Component\Routing\Annotation\Route;
+use User;
+use Doctrine\ORM\Query\ResultSetMapping;
+
 class UserController extends Controller {
 
-    public function create() {
-        $stmt = $this->db->query("SELECT id, ville_nom 
-                                  FROM villes_france_free 
-                                  LIMIT 20");
-        $villes = $stmt->fetchAll(\PDO::FETCH_ASSOC);
-    
-        echo $this->twig->render('create.html', ['villes' => $villes]);
-    }
-    
-    public function insert()
-{
-    try {
+    public function one($params)
+    {
+        $entityManager = $params["em"];
+        $connectUser = "Un seul";
 
-        $user_nom = $_POST['nom'];
-        $user_prenom = $_POST['prenom'];
-        $ville_id = $_POST['ville_id'];
+        $user = new User();
 
-        $stmt = $this->db->prepare("INSERT INTO user (user_nom, user_prenom, ville_id) VALUES (:nom, :prenom, :ville_id)");
-        $stmt->bindParam(':nom', $user_nom);
-        $stmt->bindParam(':prenom', $user_prenom);
-        $stmt->bindParam(':ville_id', $ville_id);
+        $user -> setNom("LINEATTE");
+        
+        $user -> setPrenom("Guillaume");
+        //var_dump($user);die;
+        $entityManager -> persist($user);
+        
+        $entityManager -> flush();
 
-        $stmt->execute();
-
-        echo "Les données ont été insérées avec succès.";
-    } 
-    catch (\PDOException $e) {
-        echo "Erreur lors de l'insertion des données : " . $e->getMessage();
-        }
-        header('Location: /guillaume/site/views/list.html');
-            exit();
+        echo $this->twig->render('index.html', ['connectUser' => $connectUser, 'params' => $params]);
     }
 
-    public function list() {
-        try {
-            $stmt = $this->db->query("SELECT u.user_nom, u.user_prenom, v.ville_nom
-                                      FROM user u
-                                      LEFT JOIN villes_france_free v ON u.ville_id = v.id");
-            $users = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+    public function userList($params) {
+        $entityManager = $params["em"];
+        $userRepository = $entityManager->getRepository('User');
 
-            echo $this->twig->render('list.html', ['users' => $users]);
-        } catch (\PDOException $e) {
-            echo "Erreur lors de la récupération des données : " . $e->getMessage();
-        }
+        
+        $users = $userRepository->findAll();
+
+            echo $this->twig->render('userList.html', ['users' => $users, 'url' => $params['url']]);
+       
+    }
+
+    public function create() 
+    {
+        echo $this->twig->render('create.html');
+    }
+
+    public function insert($params) {
+
+        $em = $params['em'];
+        $nom =($_POST['nom']);
+        $prenom =($_POST['prenom']);
+
+        $newUser = new User();
+        $newUser->setNom($nom);
+        $newUser->setPrenom($prenom);
+
+        $em->persist($newUser);
+        $em->flush();
+
+        header('Location: start.php?c=user&t=userList');
+    }
+
+    public function edit($params) {
+        //if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        $id = $params['get']['id'];
+        $em = $params["em"];
+        $user = $em->find('User', $id);
+        echo $this->twig->render('edit.html', ['user' => $user]);
+        
+    }
+
+    public function update($params) {
+        $id = $params['get']['id'];
+        $em = $params['em'];
+        $user = $em->find('User', $id);
+
+        //var_dump($params['post']);die;
+        $user->setNom = $params['post']['nom'];
+        $user->setPrenom =$params['post']['prenom'];
+
+        
+
+        $em->flush();
+        $this->userList();
+        //echo $this->twig->render('edit.html', ['user' => $user]);
     }
 }
 ?>

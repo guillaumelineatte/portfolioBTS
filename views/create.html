@@ -17,13 +17,7 @@
     
         <label for="prenom">Prénom :</label>
         <input type="text" id="prenom" name="prenom" required><br>
-    
-        <label for="ville">Ville :</label>
-        <select id="ville" name="ville_id" required>
-            {% for v in villes %}
-                <option value="{{ v.id }}">{{ v.ville_nom }}</option>
-            {% endfor %}
-        </select><br>
+
     
         <input type="submit" value="Envoyer">
     </form>

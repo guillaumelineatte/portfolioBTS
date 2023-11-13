@@ -16,15 +16,16 @@
 <table id="table" class="display" border = 34>
     <thead>
         <tr>
-            <th>Table des départements</th>
-            <th>Numéro de département</th>
+            <th>Table des users</th>
         </tr>
     </thead>
     <tbody>
-            {% for data in datas %}
+            {% for user in users %}
                 <tr>
-                    <td>{{ data.departement_nom }}</td>
-                    <td>{{ data.departement_code }}</td>
+                    <td>{{ users.id }}</td>
+                    <td>{{ users.nom }}</td>
+                    <td>{{ users.prenom }}</td>
+                    <td>{{ users.password }}</td>
                 </tr>
             {% endfor %}
     <script>
