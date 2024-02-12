@@ -1,25 +1,25 @@
-{% extends "base.html" %}
-
-{% block stylesheet %}
-
-{% endblock %}
-
+{% extends "base.html" %} {% block title %} Créer un utilisateur {% endblock %}
 {% block body %}
+<style>
+  .centered-form {
+    display: flex;
+    align-items: center;
+    text-align: center;
+    height: 50vh;
+    justify-content: center;
+    border-radius: 25px;
+  }
+</style>
+<h1>Créer un utilisateur</h1>
+<div class="centered-form">
+  <form method="post" action="start.php?c=user&t=insert">
+    <label for="nom">Nom :</label>
+    <input type="text" name="nom" id="nom" /><br />
 
-        <p>L'utilisateur est {{ connectUser }}.</p>
+    <label for="prenom">Prénom :</label>
+    <input type="text" name="prenom" id="prenom" /><br />
 
-    <h1>
-        Enregistrement de l'utilisateur
-    </h1>
-    <form action="?c=user&t=insert" method="post">
-        <label for="nom">Nom :</label>
-        <input type="text" id="nom" name="nom" required><br>
-    
-        <label for="prenom">Prénom :</label>
-        <input type="text" id="prenom" name="prenom" required><br>
-
-    
-        <input type="submit" value="Envoyer">
-    </form>
-
+    <input type="submit" value="Créer l'utilisateur" />
+  </form>
+</div>
 {% endblock %}

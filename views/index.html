@@ -1,26 +1,53 @@
-{% extends "base.html" %}
+{% extends "base.html" %} {% block body %}
+<style>
+  .create-link {
+    background-color: #00cc96;
+    color: white;
+    border: none;
+    border-radius: 20px;
+    padding: 10px;
+    text-decoration: none;
+    text-transform: uppercase;
+    text-align: center;
+    display: block;
+    width: 150px;
+    margin: 0 auto 20px auto;
+  }
+</style>
+<h1>Liste des utilisateurs</h1>
+<a href="{{url}}start.php?c=user&t=create" class="create-link">Create</a>
+<table id="usersTable">
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>Nom</th>
+      <th>Prenom</th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for user in users %}
+    <tr>
+      <td>{{ user.id }}</td>
+      <td>{{ user.nom }}</td>
+      <td>{{ user.prenom }}</td>
+      <td>
+        <a href="{{url}}start.php?c=user&t=edit&id={{user.id}}">Edit</a>
+      </td>
+      <td>
+        <a href="{{url}}start.php?c=user&t=delete&id={{user.id}}">Delete</a>
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
 
-{% block stylesheet %}
-{% endblock %}
+{% block javascript %}
 
-{% block body %}
-
-    <p>L'utilisateur est {{ connectUser }}.</p>
-
-    <h1>
-        Enregistrement de l'utilisateur
-    </h1>
-    <form action="/insert" method="post">
-        <label for="nom">Nom :</label>
-        <input type="text" id="nom" name="nom" required><br>
-
-        <label for="prenom">Prénom :</label>
-        <input type="text" id="prenom" name="prenom" required><br>
-
-        <label for="ville">Ville :</label>
-        <input type="text" id="ville" name="ville" required><br>
-
-        <input type="submit" value="Envoyer">
-    </form>
-
-{% endblock %}
+<script>
+  $(document).ready(function () {
+    $("#usersTable").DataTable();
+  });
+</script>
+{% endblock %} {% endblock %}

@@ -1,0 +1,42 @@
+{% extends "adminbase.html" %} {% block title %} Modifier le Candidat {% endblock%}
+{% block body %}
+<div class="edit-candidat">
+  <h1>Modifier le Candidat</h1>
+  <form method="post" action="start.php?c=candidat&t=updateCandidat" enctype="multipart/form-data">
+    <input type="hidden" name="id" value="{{ candidat.id }}" />
+      <label for="nom">Nom :</label>
+      <input type='text' name='nom' id='nom' value="{{ candidat.nom }}"/><br />
+
+      <label for="prenom">Prenom :</label>
+      <input type="text" name="prenom" id="prenom" value="{{ candidat.prenom }}"><br />
+
+      <label for="num">Numéro Candidat :</label>
+      <input type="text" name="num" id="num" value="{{ candidat.numerocandidat }}"><br />
+
+      <label for="avatar">Photo actuel :</label>
+    <img src="data:image/png;base64,{{ candidat.avatar }}" width="100px" />
+
+    <label for="photo">Nouvelle photo :</label>
+    <input type="file" name="photo" id="photo" /><br />
+
+      <label for="option">Option :</label>
+      <input type="text" name="option" id="option" value="{{ candidat.option }}"><br />
+
+      <label for="url">Url :</label>
+      <input type="text" name="url" id="url" value="{{ candidat.url  }}" /><br />
+
+      <label for="centre">Centre :</label>
+    <select name="centre" id="centre">
+      {% for centre in centres %}
+        {% if centre.id == candidat.centre.id %}
+          <option value="{{ centre.id }}" selected>{{ centre.nom }}</option>
+        {% else %}
+          <option value="{{ centre.id }}">{{ centre.nom }}</option>
+        {% endif %}
+      {% endfor %}
+    </select><br />
+
+      <input type="submit" value="Modifier le Candidat" />
+  </form>
+</div>
+{% endblock %}

@@ -1,0 +1,41 @@
+{% extends 'adminbase.html' %}
+{% block body %}
+    <h1>Liste des Centres</h1>
+    <a href="{{url}}start.php?c=centre&t=createcentre" class="create-link">Créer</a><p><br /></p>
+    <table id="centreTable">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Nom</th>
+                <th>Adresse</th>
+                <th>Ville</th>
+                <th></th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for centre in centres %}
+            <tr>
+                <td>{{ centre.id }}</td>
+                <td>{{ centre.nom }}</td>
+                <td>{{ centre.adresse }}</td>
+                <td>{{ centre.ville }}</td>
+                <td>
+                    <a href="{{url}}start.php?c=centre&t=editCentre&id={{centre.id}}" class="edit-btn">Editer</a>
+                </td>
+                <td>
+                    <a href="{{url}}start.php?c=centre&t=deleteCentre&id={{centre.id}}" class="delete-btn">Supprimer</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    {% block javascript %}
+        <script>
+            $(document).ready(function () {
+                $("#centreTable").DataTable();
+            });
+        </script>
+    {% endblock %}
+{% endblock %}

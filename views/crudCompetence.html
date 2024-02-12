@@ -1,0 +1,37 @@
+{% extends 'adminbase.html' %}
+{% block body %}
+    <h1>Liste des Compétences</h1>
+    <a href="{{url}}start.php?c=competence&t=createcompetence" class="create-link">Créer</a><p><br /></p>
+    <table id="competenceTable">
+        <thead>
+            <tr>
+                <th>Intitulé de la compétence</th>
+                <th>Description</th>
+                <th></th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for competence in competences %}
+            <tr>
+                <td>{{ competence.shortlib }}</td>
+                <td>{{ competence.longlib }}</td>
+                <td>
+                    <a href="{{url}}start.php?c=competence&t=editCompetence&id={{competence.id}}" class="edit-btn">Editer</a>
+                </td>
+                <td>
+                    <a href="{{url}}start.php?c=competence&t=deleteCompetence&id={{competence.id}}" class="delete-btn">Supprimer</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    {% block javascript %}
+        <script>
+            $(document).ready(function () {
+                $("#competenceTable").DataTable();
+            });
+        </script>
+    {% endblock %}
+{% endblock %}

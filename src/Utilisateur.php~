@@ -1,21 +1,26 @@
 <?php
+// src/Product.php
 
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\ORM\Mapping\ManyToOne;
 
 #[ORM\Entity]
-#[ORM\Table(name: 'users')]
-
-class User {
+#[ORM\Table(name: 'utilisateurs')]
+class Utilisateur
+{
     #[ORM\Id]
     #[ORM\Column(type: 'integer')]
-    #[ORM\GeneratedValue] 
+    #[ORM\GeneratedValue]
     private int|null $id = null;
     #[ORM\Column(type: 'string')]
     private string $nom;
     #[ORM\Column(type: 'string')]
     private string $prenom;
-    #[ORM\Column(type: 'string', length: 12, nullable: true)]
+    #[ORM\Column(type: 'string')]
+    private string $email;
+    #[ORM\Column(type: 'string')]
     private string $password;
+
 
     /**
      * Get id.
@@ -76,13 +81,37 @@ class User {
     }
 
     /**
-     * Set password.
+     * Set email.
      *
-     * @param string|null $password
+     * @param string $email
      *
      * @return User
      */
-    public function setPassword($password = null)
+    public function setEmail($email)
+    {
+        $this->email = $email;
+
+        return $this;
+    }
+
+    /**
+     * Get email.
+     *
+     * @return string
+     */
+    public function getEmail()
+    {
+        return $this->email;
+    }
+
+    /**
+     * Set password.
+     *
+     * @param string $password
+     *
+     * @return User
+     */
+    public function setPassword($password)
     {
         $this->password = $password;
 
@@ -92,7 +121,7 @@ class User {
     /**
      * Get password.
      *
-     * @return string|null
+     * @return string
      */
     public function getPassword()
     {

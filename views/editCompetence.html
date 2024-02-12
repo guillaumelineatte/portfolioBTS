@@ -1,0 +1,16 @@
+{% extends "adminbase.html" %} {% block title %} Modifier le Centre {% endblock%}
+{% block body %}
+<div class="edit-competence">
+  <h1>Modifier la Compétence</h1>
+  <form method="post" action="start.php?c=competence&t=updateCompetence">
+    <input type="hidden" name="id" value="{{ competence.id }}" />
+      <label for="short_lib">Compétence Courte :</label>
+      <input type='text' name='short_lib' id='short_lib' value="{{ competence.shortlib }}"/><br />
+
+      <label for="long_lib">Compétence Longue :</label>
+      <input type='text' name='long_lib' id='long_lib' value="{{ competence.longlib }}"/><br />
+
+      <input type="submit" value="Modifier la Compétence" />
+  </form>
+</div>
+{% endblock %}

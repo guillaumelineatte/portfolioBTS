@@ -1,0 +1,47 @@
+{% extends 'adminbase.html' %}
+{% block body %}
+    <h1>Liste des Candidats</h1>
+    <a href="{{url}}start.php?c=candidat&t=createcandidat" class="create-link">Créer</a><p><br /></p>
+    <table id="candidatTable">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Nom</th>
+                <th>Prenom</th>
+                <th>Photo</th>
+                <th>Centre</th>
+                <th>Numero Candidat</th>
+                <th>Option</th>
+                <th>Url</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for candidat in candidats %}
+            <tr>
+                <td>{{ candidat.id }}</td>
+                <td>{{ candidat.nom }}</td>
+                <td>{{ candidat.prenom }}</td>
+                <td><img width=100px src="data:image/png;base64,{{ candidat.avatar }}"/></td>
+                <td>{{ centreNames[candidat.id] }}</td>
+                <td>{{ candidat.numerocandidat }}</td>
+                <td>{{ candidat.option }}</td>
+                <td>{{ candidat.url }}</td>
+                <td>
+                    <a href="{{url}}start.php?c=candidat&t=editCandidat&id={{candidat.id}}" class="edit-btn">Editer</a>
+                </td>
+                <td>
+                    <a href="{{url}}start.php?c=candidat&t=deleteCandidat&id={{candidat.id}}" class="delete-btn">Supprimer</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    {% block javascript %}
+        <script>
+            $(document).ready(function () {
+                $("#candidatTable").DataTable();
+            });
+        </script>
+    {% endblock %}
+{% endblock %}

@@ -1,0 +1,239 @@
+{% extends 'adminbase.html' %}
+{% block body %}
+    <h1 id="welcomeText">Portfolio de {{ utilisateur_prenom }} {{ utilisateur_nom }}</h1>
+    <button id="loginButton">Se connecter</button>
+    <button id="logoutButton" style="display: none;">Se déconnecter</button>
+
+
+    <form class="login-form" id="loginForm">
+
+        {% if error %}
+            <p style="color: red;">{{ error }}</p>
+        {% endif %}
+
+        <label for="email">Email :</label>
+            <input type="email" name="email" id="email" /><br />
+
+            <label for="password">Mot De Passe :</label>
+            <input type="password" name="password" id="password" /><br />
+
+            <input type="submit" value="Se connecter" />
+    </form>
+    <div id="loginMessage"></div>
+
+
+    <table id="Portfolio">
+        <thead>
+            <tr>
+                <th>Réalisations</th>
+                {% for competence in competences %}
+                <td>{{ competence.shortlib }}</td>
+                {% endfor %}
+            </tr>
+                <th></th>
+                {% for competence in competences %}
+                <td>{{ competence.longlib }}</td>
+                {% endfor %}
+            <tr>
+        </thead>
+        <tbody>
+            {% for realisation in realisations %}
+                <tr>
+                    <td>{{ realisation.lib }}</td>
+                    {% for competence in competences %}
+                    <td class="synt" data-realisation-id="{{ realisation.id }}" data-competence-id="{{ competence.id }}"
+                    id="{{ competence.id }}-{{ realisation.id }}" data-relation="0"></td>
+
+                    {% endfor %}
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}
+
+{% block javascript %}
+<script>
+
+$( function() {
+    $( "#welcomeText" ).hide();
+    $( "#logoutButton" ).hide();
+    $( "#loginButton" ).show();
+    $( "#loginForm" ).dialog({
+    autoOpen: false,
+    });
+
+    $( "#loginButton" ).on( "click", function() {
+    $( "#loginForm" ).dialog( "open" );
+    });
+} );
+
+$(document).ready(function() {
+$.ajax({
+    url: '?c=utilisateur&t=checkLoginStatus',
+    method: 'GET',
+    success: function(response) {
+        respStatus = JSON.parse(response);
+        if (respStatus.isLoggedIn) {
+            $( "#welcomeText" ).show();
+            $("#loginButton").hide();
+            $("#logoutButton").show();
+        } else {
+            $( "#welcomeText" ).hide();
+            $("#loginButton").show();
+            $("#logoutButton").hide();
+        }
+    },
+    error: function(xhr, status, error) {
+        console.error(error);
+    }})
+});
+
+$(function() {
+$("#loginForm").submit(function(event) {
+    event.preventDefault();
+
+    var email = $("#email").val();
+    var password = $("#password").val();
+
+    $.ajax({
+        url: '?c=utilisateur&t=verifLogin',
+        method: 'POST',
+        data: {
+            email: email,
+            password: password
+        },
+        success: function(response) {
+            respConnect = JSON.parse(response);
+            console.log(respConnect);
+            if (respConnect.status === 'success') {
+                console.log('Connexion réussi');
+                $("#loginForm").dialog("close");
+                $("#loginButton").hide();
+                $("#logoutButton").show();
+
+                location.reload();
+            } else {
+                console.log('Erreur de connexion');
+                $("#loginMessage").text(respConnect.message);
+            }
+        },
+        error: function(xhr, status, error) {
+            console.error(error);
+        }
+    });
+});
+$("#logoutButton").on("click", function() {
+    $.ajax({
+        url: '?c=utilisateur&t=logout',
+        success: function(response) {
+            respLogout = JSON.parse(response);
+            if (respLogout.status === 'success') {
+                console.log('Déconnexion réussi');
+                $("#loginButton").show();
+                $("#logoutButton").hide();
+
+                location.reload();
+            } else {
+                console.log('Erreur de déconnexion');
+            }
+        },
+        error: function(xhr, status, error) {
+            console.error(error);
+        },
+    });
+},
+);})
+
+
+
+
+$('.synt').on('click', function() {
+    var clickedElement = $(this);
+    $.ajax({
+        url: '?c=utilisateur&t=checkLoginStatus',
+        method: 'GET',
+        success: function(response) {
+            respStatus = JSON.parse(response);
+            if (respStatus.isLoggedIn) {
+                var realisationId = clickedElement.data('realisation-id');
+                var competenceId = clickedElement.data('competence-id');
+                toggleCompetence(realisationId, competenceId, clickedElement);
+            } else {
+                $("#loginForm").dialog("open");
+            }
+        },
+        error: function(xhr, status, error) {
+            console.error(error);
+        }
+    });
+    });
+
+$(document).ready(function() {
+    $('.synt').each(function() {
+        var cellElement = $(this);
+        var realisationId = cellElement.data('realisation-id');
+        var competenceId = cellElement.data('competence-id');
+
+        $.ajax({
+            url: '?c=portfolio&t=checkRelation',
+            method: 'POST',
+            data: {
+                realisationId: realisationId,
+                competenceId: competenceId
+            },
+            success: function(response) {
+                respRelation=JSON.parse(response)
+                if (respRelation.status === 'exists') {
+                    cellElement.text("OK").addClass("validated");
+                }
+            },
+            error: function(xhr, status, error) {
+                console.error(error);
+            }
+        });
+    });
+});
+
+function toggleCompetence(realisationId, competenceId, cellElement) {
+    const currentStatus = $(cellElement).text().trim();
+    if (currentStatus === "") {
+        $.ajax({
+            url: '?c=portfolio&t=addCompetence',
+            method: 'POST',
+            data: {
+                realisationId: realisationId,
+                competenceId: competenceId
+            },
+            success: function(response) {
+                respObj=JSON.parse(response);
+                if (respObj.status === 'success') {
+                    $(cellElement).text("OK").addClass("validated");
+                }
+            },
+            error: function(xhr, status, error) {
+                console.error(error);
+            }
+        });
+    } else {
+        $.ajax({
+            url: '?c=portfolio&t=removeCompetence',
+            method: 'POST',
+            data: {
+                realisationId: realisationId,
+                competenceId: competenceId
+            },
+            success: function(response) {
+                respObj=JSON.parse(response);
+                if (respObj.status === 'success') {
+                    $(cellElement).empty().removeClass("validated");
+                }
+            },
+            error: function(xhr, status, error) {
+                console.error(error);
+            }
+        });
+    }
+}
+</script>
+
+{% endblock %}

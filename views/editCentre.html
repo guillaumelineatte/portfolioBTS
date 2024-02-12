@@ -1,0 +1,19 @@
+{% extends "adminbase.html" %} {% block title %} Modifier le Centre {% endblock%}
+{% block body %}
+<div class="edit-centre">
+  <h1>Modifier le Centre</h1>
+  <form method="post" action="start.php?c=centre&t=updateCentre">
+    <input type="hidden" name="id" value="{{ centre.id }}" />
+      <label for="nom">Nom :</label>
+      <input type='text' name='nom' id='nom' value="{{ centre.nom }}"/><br />
+
+      <label for="adresse">Adrese :</label>
+      <input type='text' name='adresse' id='adresse' value="{{ centre.adresse }}"/><br />
+
+      <label for="ville">Ville :</label>
+      <input type='text' name='ville' id='ville' value="{{ centre.ville }}"/><br />
+
+      <input type="submit" value="Modifier le Centre" />
+  </form>
+</div>
+{% endblock %}

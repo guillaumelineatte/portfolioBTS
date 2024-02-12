@@ -1,0 +1,37 @@
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    line-height: 1.6;
+}
+
+#Portfolio {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+#Portfolio th {
+    background-color: #f2f2f2;
+    text-align: center;
+    padding: 10px;
+    border: 1px solid #ccc;
+}
+
+#Portfolio td {
+    padding: 10px;
+    border: 1px solid #ccc;
+}
+
+#Portfolio td:first-child {
+    font-weight: bold;
+    text-align: center;
+}
+
+#Portfolio td:not(:first-child) {
+    text-align: center;
+}
+
+.validated {
+    background-color: green;
+    color: white;
+}

@@ -1,0 +1,15 @@
+
+{% block body %}
+<h1>Ajouter une Compétence</h1>
+<div class="competence-form">
+    <form method="post" action="start.php?c=competence&t=insert">
+        <label for="short_lib">Intitulé de la compétence :</label>
+        <input type='text' name='short_lib' id='short_lib' /><br />
+
+        <label for="long_lib">Description :</label>
+        <input type='text' name='long_lib' id='long_lib' /><br />
+
+        <input type="submit" value="Ajouter la Compétence   " />
+    </form>
+</div>
+{% endblock %}

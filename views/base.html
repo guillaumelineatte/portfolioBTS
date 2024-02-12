@@ -1,35 +1,19 @@
 <!DOCTYPE html>
-<html lang="fr">
-<head>
-    <meta charset="UTF-8">
-    {% block stylesheet %}
-    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.24/css/jquery.dataTables.css">
-{% endblock %}
+<html>
+  <head>
+    <link rel="stylesheet" type="text/css" href="views/style.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdn.datatables.net/1.13.7/css/jquery.dataTables.css"
+    />
+
+    <meta charset="UTF-8" />
+    {% block stylesheet %} {% endblock %}
     <title>{% block title %} Home {% endblock %}</title>
-</head>
-<body>
-
-    <h1>Base HTML test branche test</h1>
-    <ul>
-        <li><a href="http://195.154.118.169/guillaume/site/start.php?c=index&t=index">Test1</a></li>
-        
-        <li><a href="http://195.154.118.169/guillaume/site/start.php?c=user&t=userList">Test2</a></li>
-    </ul>
-
-    {% block body %}
-    {% endblock %}
-
-    {% block javascript %}
-        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
-        <script src="https://cdn.datatables.net/1.10.24/js/jquery.dataTables.js"></script>
-
-        <script>
-            $(document).ready(function() {
-                $('#usersTable').DataTable();
-            });
-        </script>
-    {% endblock %}
-
-</body>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.js"></script>
+  </head>
+  <body>
+    {% block body %} {% endblock %} {% block script %} {% endblock %}
+  </body>
 </html>

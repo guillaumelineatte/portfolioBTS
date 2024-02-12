@@ -1,0 +1,18 @@
+
+{% block body %}
+<h1>Ajouter un Centre</h1>
+<div class="centre-form">
+    <form method="post" action="start.php?c=centre&t=insert" enctype="multipart/form-data">
+        <label for="nom">Nom :</label>
+        <input type='text' name='nom' id='nom' /><br />
+
+        <label for="adresse">Adresse :</label>
+        <input type='text' name='adresse' id='adresse' /><br />
+
+        <label for="ville">Ville :</label>
+        <input type="text" name="ville" id="ville" /><br />
+
+        <input type="submit" value="Ajouter le Centre   " />
+    </form>
+</div>
+{% endblock %}

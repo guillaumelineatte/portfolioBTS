@@ -1,0 +1,20 @@
+{% extends "adminbase.html" %}
+
+{% block body %}
+<h1>Ajouter une Réalisation</h1>
+<div class="realisation-form">
+    <form method="post" action="start.php?c=realisation&t=insert">
+        <label for="lib">Réalisation :</label>
+        <input type='text' name='lib' id='lib' /><br />
+
+        <label for="competence">Compétence validée :</label>
+        <select name="competence" id="competence">
+            {% for competence in competences %}
+            <option value="{{ competence.id }}">{{ competence.shortlib }}</option>
+            {% endfor %}
+        </select><br />
+
+        <input type="submit" value="Ajouter la Realisation   " />
+    </form>
+</div>
+{% endblock %}
