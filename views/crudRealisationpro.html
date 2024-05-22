@@ -1,0 +1,44 @@
+{% extends 'adminbase.html' %}
+
+{% block body %}
+    <h1>Liste des Réalisations</h1>
+    <a href="{{url}}start.php?c=realisationpro&t=createRealisationpro" class="create-link">Créer</a><p><br /></p>
+    <table id="realisationproTable">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Réalisations</th>
+                <th></th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for realisationpro in realisationpros %}
+        <tr>
+            <td>{{ realisationpro.id }}</td>
+            <td>{{ realisationpro.lib }}</td>
+            <!-- <td>
+                {% for competenceName in competenceNames[realisationpro.id] %}
+                    {{ competenceName }}{% if not loop.last %}, {% endif %}
+                {% endfor %}
+            </td> -->
+            <td>
+                <a href="{{url}}start.php?c=realisationpro&t=editRealisationpro&id={{realisationpro.id}}" class="edit-btn">Editer</a>
+            </td>
+            <td>
+                <a href="{{url}}start.php?c=realisationpro&t=deleteRealisationpro&id={{realisationpro.id}}" class="delete-btn">Supprimer</a>
+            </td>
+        </tr>
+        {% endfor %}
+
+        </tbody>
+    </table>
+
+    {% block javascript %}
+        <script>
+            $(document).ready(function () {
+                $("#realisationproTable").DataTable();
+            });
+        </script>
+    {% endblock %}
+{% endblock %}

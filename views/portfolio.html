@@ -4,46 +4,72 @@
     <button id="loginButton">Se connecter</button>
     <button id="logoutButton" style="display: none;">Se déconnecter</button>
 
-
     <form class="login-form" id="loginForm">
-
         {% if error %}
             <p style="color: red;">{{ error }}</p>
         {% endif %}
-
         <label for="email">Email :</label>
-            <input type="email" name="email" id="email" /><br />
-
-            <label for="password">Mot De Passe :</label>
-            <input type="password" name="password" id="password" /><br />
-
-            <input type="submit" value="Se connecter" />
+        <input type="email" name="email" id="email" /><br />
+        <label for="password">Mot De Passe :</label>
+        <input type="password" name="password" id="password" /><br />
+        <input type="submit" value="Se connecter" />
     </form>
     <div id="loginMessage"></div>
-
 
     <table id="Portfolio">
         <thead>
             <tr>
-                <th>Réalisations</th>
+                <th>Compétences</th>
                 {% for competence in competences %}
-                <td>{{ competence.shortlib }}</td>
+                    <td>{{ competence.shortLib }}</td>
                 {% endfor %}
             </tr>
+            <tr>
                 <th></th>
                 {% for competence in competences %}
-                <td>{{ competence.longlib }}</td>
+                    <td>{{ competence.longLib }}</td>
                 {% endfor %}
+            </tr>
             <tr>
+                <th>Réalisations</th>
+                <td colspan="{{ competences|length }}">Réalisations en cours de formation</td>
+            </tr>
         </thead>
         <tbody>
             {% for realisation in realisations %}
                 <tr>
                     <td>{{ realisation.lib }}</td>
                     {% for competence in competences %}
-                    <td class="synt" data-realisation-id="{{ realisation.id }}" data-competence-id="{{ competence.id }}"
-                    id="{{ competence.id }}-{{ realisation.id }}" data-relation="0"></td>
+                        <td class="synt" data-realisation-id="{{ realisation.id }}" data-competence-id="{{ competence.id }}"
+                        id="{{ competence.id }}-{{ realisation.id }}" data-relation="0"></td>
+                    {% endfor %}
+                </tr>
+            {% endfor %}
 
+            <tr>
+                <th>Réalisations Personnelles</th>
+                <td colspan="{{ competences|length }}">Réalisations personnelles</td>
+            </tr>
+            {% for realisationperso in realisationpersos %}
+                <tr>
+                    <td>{{ realisationperso.lib }}</td>
+                    {% for competence in competences %}
+                        <td class="synt-perso" data-realisation-id="{{ realisationperso.id }}" data-competence-id="{{ competence.id }}"
+                        id="{{ competence.id }}-{{ realisationperso.id }}" data-relation="0"></td>
+                    {% endfor %}
+                </tr>
+            {% endfor %}
+
+            <tr>
+                <th>Réalisations au Travail</th>
+                <td colspan="{{ competences|length }}">Réalisations professionnelles</td>
+            </tr>
+            {% for realisationpro in realisationpros %}
+                <tr>
+                    <td>{{ realisationpro.lib }}</td>
+                    {% for competence in competences %}
+                        <td class="synt-pro" data-realisation-id="{{ realisationpro.id }}" data-competence-id="{{ competence.id }}"
+                        id="{{ competence.id }}-{{ realisationpro.id }}" data-relation="0"></td>
                     {% endfor %}
                 </tr>
             {% endfor %}
@@ -53,101 +79,97 @@
 
 {% block javascript %}
 <script>
-
 $( function() {
     $( "#welcomeText" ).hide();
     $( "#logoutButton" ).hide();
     $( "#loginButton" ).show();
     $( "#loginForm" ).dialog({
-    autoOpen: false,
+        autoOpen: false,
     });
 
     $( "#loginButton" ).on( "click", function() {
-    $( "#loginForm" ).dialog( "open" );
+        $( "#loginForm" ).dialog( "open" );
     });
 } );
 
 $(document).ready(function() {
-$.ajax({
-    url: '?c=utilisateur&t=checkLoginStatus',
-    method: 'GET',
-    success: function(response) {
-        respStatus = JSON.parse(response);
-        if (respStatus.isLoggedIn) {
-            $( "#welcomeText" ).show();
-            $("#loginButton").hide();
-            $("#logoutButton").show();
-        } else {
-            $( "#welcomeText" ).hide();
-            $("#loginButton").show();
-            $("#logoutButton").hide();
+    $.ajax({
+        url: '?c=utilisateur&t=checkLoginStatus',
+        method: 'GET',
+        success: function(response) {
+            respStatus = JSON.parse(response);
+            if (respStatus.isLoggedIn) {
+                $( "#welcomeText" ).show();
+                $("#loginButton").hide();
+                $("#logoutButton").show();
+            } else {
+                $( "#welcomeText" ).hide();
+                $("#loginButton").show();
+                $("#logoutButton").hide();
+            }
+        },
+        error: function(xhr, status, error) {
+            console.error(error);
         }
-    },
-    error: function(xhr, status, error) {
-        console.error(error);
-    }})
+    });
 });
 
 $(function() {
-$("#loginForm").submit(function(event) {
-    event.preventDefault();
+    $("#loginForm").submit(function(event) {
+        event.preventDefault();
 
-    var email = $("#email").val();
-    var password = $("#password").val();
+        var email = $("#email").val();
+        var password = $("#password").val();
 
-    $.ajax({
-        url: '?c=utilisateur&t=verifLogin',
-        method: 'POST',
-        data: {
-            email: email,
-            password: password
-        },
-        success: function(response) {
-            respConnect = JSON.parse(response);
-            console.log(respConnect);
-            if (respConnect.status === 'success') {
-                console.log('Connexion réussi');
-                $("#loginForm").dialog("close");
-                $("#loginButton").hide();
-                $("#logoutButton").show();
-
-                location.reload();
-            } else {
-                console.log('Erreur de connexion');
-                $("#loginMessage").text(respConnect.message);
+        $.ajax({
+            url: '?c=utilisateur&t=verifLogin',
+            method: 'POST',
+            data: {
+                email: email,
+                password: password
+            },
+            success: function(response) {
+                respConnect = JSON.parse(response);
+                console.log(respConnect);
+                if (respConnect.status === 'success') {
+                    console.log('Connexion réussi');
+                    $("#loginForm").dialog("close");
+                    $("#loginButton").hide();
+                    $("#logoutButton").show();
+                    location.reload();
+                } else {
+                    console.log('Erreur de connexion');
+                    $("#loginMessage").text(respConnect.message);
+                }
+            },
+            error: function(xhr, status, error) {
+                console.error(error);
             }
-        },
-        error: function(xhr, status, error) {
-            console.error(error);
-        }
+        });
+    });
+
+    $("#logoutButton").on("click", function() {
+        $.ajax({
+            url: '?c=utilisateur&t=logout',
+            success: function(response) {
+                respLogout = JSON.parse(response);
+                if (respLogout.status === 'success') {
+                    console.log('Déconnexion réussi');
+                    $("#loginButton").show();
+                    $("#logoutButton").hide();
+                    location.reload();
+                } else {
+                    console.log('Erreur de déconnexion');
+                }
+            },
+            error: function(xhr, status, error) {
+                console.error(error);
+            },
+        });
     });
 });
-$("#logoutButton").on("click", function() {
-    $.ajax({
-        url: '?c=utilisateur&t=logout',
-        success: function(response) {
-            respLogout = JSON.parse(response);
-            if (respLogout.status === 'success') {
-                console.log('Déconnexion réussi');
-                $("#loginButton").show();
-                $("#logoutButton").hide();
 
-                location.reload();
-            } else {
-                console.log('Erreur de déconnexion');
-            }
-        },
-        error: function(xhr, status, error) {
-            console.error(error);
-        },
-    });
-},
-);})
-
-
-
-
-$('.synt').on('click', function() {
+$('.synt, .synt-perso, .synt-pro').on('click', function() {
     var clickedElement = $(this);
     $.ajax({
         url: '?c=utilisateur&t=checkLoginStatus',
@@ -166,31 +188,36 @@ $('.synt').on('click', function() {
             console.error(error);
         }
     });
-    });
+});
 
 $(document).ready(function() {
-    $('.synt').each(function() {
+    $('.synt, .synt-perso, .synt-pro').each(function() {
         var cellElement = $(this);
         var realisationId = cellElement.data('realisation-id');
         var competenceId = cellElement.data('competence-id');
+        var isFirstCompetence = cellElement.data('is-first-competence');
 
-        $.ajax({
-            url: '?c=portfolio&t=checkRelation',
-            method: 'POST',
-            data: {
-                realisationId: realisationId,
-                competenceId: competenceId
-            },
-            success: function(response) {
-                respRelation=JSON.parse(response)
-                if (respRelation.status === 'exists') {
-                    cellElement.text("OK").addClass("validated");
+        if (isFirstCompetence) {
+            cellElement.text("Non autorisé").addClass("disabled");
+        } else {
+            $.ajax({
+                url: '?c=portfolio&t=checkRelation',
+                method: 'POST',
+                data: {
+                    realisationId: realisationId,
+                    competenceId: competenceId
+                },
+                success: function(response) {
+                    respRelation = JSON.parse(response);
+                    if (respRelation.status === 'exists') {
+                        cellElement.text("OK").addClass("validated");
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.error(error);
                 }
-            },
-            error: function(xhr, status, error) {
-                console.error(error);
-            }
-        });
+            });
+        }
     });
 });
 
@@ -205,7 +232,7 @@ function toggleCompetence(realisationId, competenceId, cellElement) {
                 competenceId: competenceId
             },
             success: function(response) {
-                respObj=JSON.parse(response);
+                respObj = JSON.parse(response);
                 if (respObj.status === 'success') {
                     $(cellElement).text("OK").addClass("validated");
                 }
@@ -223,7 +250,7 @@ function toggleCompetence(realisationId, competenceId, cellElement) {
                 competenceId: competenceId
             },
             success: function(response) {
-                respObj=JSON.parse(response);
+                respObj = JSON.parse(response);
                 if (respObj.status === 'success') {
                     $(cellElement).empty().removeClass("validated");
                 }
@@ -235,5 +262,8 @@ function toggleCompetence(realisationId, competenceId, cellElement) {
     }
 }
 </script>
+
+<!-- Ajout de la section pour realisationperso -->
+
 
 {% endblock %}

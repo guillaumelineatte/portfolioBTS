@@ -1,0 +1,25 @@
+{% extends "adminbase.html" %} {% block title %} Modifier la Réalisation {% endblock%}
+{% block body %}
+<div class="edit-realisationperso">
+  <h1>Modifier la Réalisation</h1>
+  <form method="post" action="start.php?c=realisationperso&t=updateRealisationperso">
+    <input type="hidden" name="id" value="{{ realisation.id }}" />
+
+      <label for="lib">Réalisation :</label>
+      <input type='text' name='lib' id='lib' value="{{ realisationperso.lib }}"/><br />
+
+      <!-- <label for="competence">Compétence Validée :</label>
+    <select name="competence" id="competence">
+      {% for competence in competences %}
+        {% if competence.id == realisationperso.competenceid %}
+          <option value="{{ competence.id }}" selected>{{ realisationperso.nom }}</option>
+        {% else %}
+          <option value="{{ competence.id }}">{{ realisationperso.nom }}</option>
+        {% endif %}
+      {% endfor %}
+    </select><br /> -->
+
+      <input type="submit" value="Modifier la Compétence" />
+  </form>
+</div>
+{% endblock %}
