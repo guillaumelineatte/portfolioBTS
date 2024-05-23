@@ -54,7 +54,7 @@
                 <tr>
                     <td>{{ realisationperso.lib }}</td>
                     {% for competence in competences %}
-                        <td class="synt-perso" data-realisation-id="{{ realisationperso.id }}" data-competence-id="{{ competence.id }}"
+                        <td class="synt-perso" data-realisationperso-id="{{ realisationperso.id }}" data-competence-id="{{ competence.id }}"
                         id="{{ competence.id }}-{{ realisationperso.id }}" data-relation="0"></td>
                     {% endfor %}
                 </tr>
@@ -68,7 +68,7 @@
                 <tr>
                     <td>{{ realisationpro.lib }}</td>
                     {% for competence in competences %}
-                        <td class="synt-pro" data-realisation-id="{{ realisationpro.id }}" data-competence-id="{{ competence.id }}"
+                        <td class="synt-pro" data-realisationpro-id="{{ realisationpro.id }}" data-competence-id="{{ competence.id }}"
                         id="{{ competence.id }}-{{ realisationpro.id }}" data-relation="0"></td>
                     {% endfor %}
                 </tr>
@@ -178,9 +178,11 @@ $('.synt, .synt-perso, .synt-pro').on('click', function() {
             respStatus = JSON.parse(response);
             if (respStatus.isLoggedIn) {
                 var realisationId = clickedElement.data('realisation-id');
+                var realisationpersoId = clickedElement.data('realisationperso-id');
+                var realisationproId = clickedElement.data('realisationpro-id');
                 var competenceId = clickedElement.data('competence-id');
                 var type = getType(clickedElement);
-                toggleCompetence(realisationId, competenceId, clickedElement, type);
+                toggleCompetence(realisationId, realisationpersoId, realisationproId, competenceId, clickedElement, type);
             } else {
                 $("#loginForm").dialog("open");
             }
@@ -195,6 +197,8 @@ $(document).ready(function() {
     $('.synt, .synt-perso, .synt-pro').each(function() {
         var cellElement = $(this);
         var realisationId = cellElement.data('realisation-id');
+        var realisationpersoId = cellElement.data('realisationperso-id');
+        var realisationproId = cellElement.data('realisationpro-id');
         var competenceId = cellElement.data('competence-id');
         var isFirstCompetence = cellElement.data('is-first-competence');
 
@@ -207,6 +211,8 @@ $(document).ready(function() {
                 method: 'POST',
                 data: {
                     realisationId: realisationId,
+                    realisationpersoId: realisationpersoId,
+                    realisationproId: realisationproId,
                     competenceId: competenceId,
                     type: type
                 },
@@ -224,7 +230,7 @@ $(document).ready(function() {
     });
 });
 
-function toggleCompetence(realisationId, competenceId, cellElement, type) {
+function toggleCompetence(realisationId, realisationpersoId, realisationproId, competenceId, cellElement, type) {
     const currentStatus = $(cellElement).text().trim();
     if (currentStatus === "") {
         $.ajax({
@@ -232,6 +238,8 @@ function toggleCompetence(realisationId, competenceId, cellElement, type) {
             method: 'POST',
             data: {
                 realisationId: realisationId,
+                realisationpersoId: realisationpersoId,
+                realisationproId: realisationproId,
                 competenceId: competenceId,
                 type: type
             },
@@ -251,6 +259,8 @@ function toggleCompetence(realisationId, competenceId, cellElement, type) {
             method: 'POST',
             data: {
                 realisationId: realisationId,
+                realisationpersoId: realisationpersoId,
+                realisationproId: realisationproId,
                 competenceId: competenceId,
                 type: type
             },
