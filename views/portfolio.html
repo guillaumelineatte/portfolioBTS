@@ -179,7 +179,8 @@ $('.synt, .synt-perso, .synt-pro').on('click', function() {
             if (respStatus.isLoggedIn) {
                 var realisationId = clickedElement.data('realisation-id');
                 var competenceId = clickedElement.data('competence-id');
-                toggleCompetence(realisationId, competenceId, clickedElement);
+                var type = getType(clickedElement);
+                toggleCompetence(realisationId, competenceId, clickedElement, type);
             } else {
                 $("#loginForm").dialog("open");
             }
@@ -200,12 +201,14 @@ $(document).ready(function() {
         if (isFirstCompetence) {
             cellElement.text("Non autorisé").addClass("disabled");
         } else {
+            var type = getType(cellElement);
             $.ajax({
                 url: '?c=portfolio&t=checkRelation',
                 method: 'POST',
                 data: {
                     realisationId: realisationId,
-                    competenceId: competenceId
+                    competenceId: competenceId,
+                    type: type
                 },
                 success: function(response) {
                     respRelation = JSON.parse(response);
@@ -221,7 +224,7 @@ $(document).ready(function() {
     });
 });
 
-function toggleCompetence(realisationId, competenceId, cellElement) {
+function toggleCompetence(realisationId, competenceId, cellElement, type) {
     const currentStatus = $(cellElement).text().trim();
     if (currentStatus === "") {
         $.ajax({
@@ -229,7 +232,8 @@ function toggleCompetence(realisationId, competenceId, cellElement) {
             method: 'POST',
             data: {
                 realisationId: realisationId,
-                competenceId: competenceId
+                competenceId: competenceId,
+                type: type
             },
             success: function(response) {
                 respObj = JSON.parse(response);
@@ -247,7 +251,8 @@ function toggleCompetence(realisationId, competenceId, cellElement) {
             method: 'POST',
             data: {
                 realisationId: realisationId,
-                competenceId: competenceId
+                competenceId: competenceId,
+                type: type
             },
             success: function(response) {
                 respObj = JSON.parse(response);
@@ -261,9 +266,15 @@ function toggleCompetence(realisationId, competenceId, cellElement) {
         });
     }
 }
+
+function getType(element) {
+    if (element.hasClass('synt-perso')) {
+        return 'perso';
+    } else if (element.hasClass('synt-pro')) {
+        return 'pro';
+    } else {
+        return 'formation';
+    }
+}
 </script>
-
-<!-- Ajout de la section pour realisationperso -->
-
-
 {% endblock %}
